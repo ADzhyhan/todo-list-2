@@ -43,12 +43,13 @@ const tasks = [
   const inputTitle = form.elements['title'];
   const inputBody = form.elements['body'];
 
-
+  //Events
   renderAllTasks(objOfTasks);
+  form.addEventListener('submit', onFormSubmitHandler);
 
   function renderAllTasks(taskList) {
     if (!taskList) {
-      console.error('Передайте список задач');
+      console.error('Pass the task list');
       return;
     }
 
@@ -96,5 +97,35 @@ const tasks = [
     li.appendChild(article); 
     
     return li;
+  }
+
+  function onFormSubmitHandler(e) {
+    e.preventDefault(); 
+    const titleValue = inputTitle.value; 
+    const bodyValue = inputBody.value;
+
+    if(!titleValue || !bodyValue) {
+      alert("Please, enter title and body");
+      return;
+    }
+
+    const task = createNewTask(titleValue, bodyValue);
+    const listItem = listItemTemplate(task);
+
+    listContainer.insertAdjacentElement('afterbegin', listItem);
+    form.reset();
+  }
+
+  function createNewTask(title, body) {
+    const newTask = {
+      title, 
+      body, 
+      completed: false, 
+      _id: `task-${Math.random()}`
+    }; 
+
+    objOfTasks[newTask._id] = newTask; 
+
+    return { ...newTask };
   }
 })(tasks);
