@@ -78,6 +78,15 @@ const tasks = [
     span.textContent = title; 
     span.style.fontWeight = 'bold'; 
 
+    const completeBtn = document.createElement('button');
+    completeBtn.textContent = 'Completed'; 
+    completeBtn.classList.add(
+      'btn', 
+      'btn-success', 
+      'ml-auto',
+      'complete-btn'
+    )
+
     const deleteBtn = document.createElement('button'); 
     deleteBtn.textContent = 'Delete task'; 
     deleteBtn.classList.add(
@@ -97,6 +106,7 @@ const tasks = [
     li.appendChild(span); 
     li.appendChild(deleteBtn); 
     li.appendChild(article); 
+    li.appendChild(completeBtn);
     
     return li;
   }
