@@ -47,6 +47,7 @@ const tasks = [
   renderAllTasks(objOfTasks);
   form.addEventListener('submit', onFormSubmitHandler);
   listContainer.addEventListener('click', onDeleteHandler);
+  listContainer.addEventListener('click', competeTask);
 
   function renderAllTasks(taskList) {
     if (!taskList) {
@@ -165,6 +166,14 @@ const tasks = [
       const confirmed = deleteTask(id); 
 
       deleteTaskFromHtml(confirmed, parent);
+    }
+  } 
+
+  function competeTask({ target }) {
+    if(target.classList.contains('complete-btn')) {
+      const parent = target.closest('[data-task-id]');
+      
+      parent.classList.toggle('list-group-item-success');
     }
   }
 })(tasks);
