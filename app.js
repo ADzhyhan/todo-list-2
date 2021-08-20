@@ -36,18 +36,25 @@ const tasks = [
     acc[task._id] = task;
     return acc;
   }, {});
-
+  
   //Elements UI 
   const listContainer = document.querySelector('.tasks-list-section .list-group');
   const form = document.forms['addTask']; 
+  const formWrapper = document.querySelector('.card');
   const inputTitle = form.elements['title'];
   const inputBody = form.elements['body'];
 
+  const error = document.createElement('span'); 
+  error.textContent = 'Task list is empty :('
+  error.style.color = 'red' 
+  error.style.fontWeight = 'bold';
+
+  if(!arrOfTasks.length) formWrapper.insertAdjacentElement('afterend', error);
   //Events
   renderAllTasks(objOfTasks);
   form.addEventListener('submit', onFormSubmitHandler);
   listContainer.addEventListener('click', onDeleteHandler);
-  listContainer.addEventListener('click', competeTask);
+  listContainer.addEventListener('click', completeTask);
 
   function renderAllTasks(taskList) {
     if (!taskList) {
@@ -149,14 +156,15 @@ const tasks = [
     if(!isConfirm) {
       return isConfirm;
     } else {
-      delete objOfTasks[id];
-      return isConfirm;
+      delete objOfTasks[id]; 
+      return isConfirm; 
     }
   } 
 
   function deleteTaskFromHtml(confirmed, el) {
     if(!confirmed) return;
-    el.remove();
+    el.remove();  
+    if(!listContainer.children.length) formWrapper.insertAdjacentElement('afterend', error);  
   }
 
   function onDeleteHandler({ target }) {
@@ -169,11 +177,12 @@ const tasks = [
     }
   } 
 
-  function competeTask({ target }) {
+  function completeTask({ target }) {
     if(target.classList.contains('complete-btn')) {
       const parent = target.closest('[data-task-id]');
       
       parent.classList.toggle('list-group-item-success');
     }
-  }
+  } 
+
 })(tasks);
