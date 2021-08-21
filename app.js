@@ -103,6 +103,7 @@ const tasks = [
       '--input-focus-box-shadow': '0 0 0 0.2rem rgba(141, 143, 146, 0.25)',
     },
   };
+  let lastSelectedTheme = 'default';
 
   //Elements UI 
   const listContainer = document.querySelector('.tasks-list-section .list-group');
@@ -110,6 +111,7 @@ const tasks = [
   const formWrapper = document.querySelector('.card');
   const inputTitle = form.elements['title'];
   const inputBody = form.elements['body'];
+  const themeSelect = document.getElementById('themeSelect');
 
   const error = document.createElement('span'); 
   error.textContent = 'Task list is empty :('
@@ -117,11 +119,13 @@ const tasks = [
   error.style.fontWeight = 'bold';
 
   if(!arrOfTasks.length) formWrapper.insertAdjacentElement('afterend', error);
+
   //Events
   renderAllTasks(objOfTasks);
   form.addEventListener('submit', onFormSubmitHandler);
   listContainer.addEventListener('click', onDeleteHandler);
   listContainer.addEventListener('click', completeTask);
+  themeSelect.addEventListener('change', onThemeSelectHandler);
 
   function renderAllTasks(taskList) {
     if (!taskList) {
@@ -252,4 +256,22 @@ const tasks = [
     }
   } 
 
+  function onThemeSelectHandler(e) {
+    const selectedTheme = themeSelect.value; 
+    const isConfirmed = confirm(`Are you sure want to change the theme on: ${selectedTheme}?`);
+
+    if(!isConfirmed) {
+      themeSelect.value = lastSelectedTheme;
+      return;
+    } 
+    setTheme(selectedTheme);
+    lastSelectedTheme = selectedTheme;
+  }
+
+  function setTheme(name) {
+    const selectedThemObj = themes[name];
+    Object.entries(selectedThemObj).forEach(([key, value]) => {
+      document.documentElement.style.setProperty(key, value);
+    });
+  }
 })(tasks);
