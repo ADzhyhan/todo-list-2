@@ -32,7 +32,7 @@ const tasks = [
 ];
 
 (function(arrOfTasks) {
-  const objOfTasks = arrOfTasks.reduce((acc, task) => {
+  let objOfTasks = arrOfTasks.reduce((acc, task) => {
     acc[task._id] = task;
     return acc;
   }, {});
@@ -123,10 +123,14 @@ const tasks = [
 
   //Events
   setTheme(lastSelectedTheme);
+  if(localStorage.getItem('todo')) {
+    objOfTasks = JSON.parse(localStorage.getItem('todo'));
+    renderAllTasks(objOfTasks);
+  }
   renderAllTasks(objOfTasks);
   form.addEventListener('submit', onFormSubmitHandler);
   listContainer.addEventListener('click', onDeleteHandler);
-  listContainer.addEventListener('click', completeTask);
+  listContainer.addEventListener('click', onCompleteHandler);
   themeSelect.addEventListener('change', onThemeSelectHandler);
 
   function renderAllTasks(taskList) {
@@ -144,7 +148,7 @@ const tasks = [
     listContainer.appendChild(fragment);
   } 
 
-  function listItemTemplate ({ _id, title, body } = {}) {
+  function listItemTemplate ({ _id, title, body, completed } = {}) {
     const li = document.createElement('li'); 
     li.classList.add(
       'list-group-item', 
@@ -154,6 +158,10 @@ const tasks = [
       'mt-2'
     );
     li.setAttribute('data-task-id', _id);
+    
+    if(completed === true) {
+      li.classList.add('list-group-item-success');
+    }
 
     const span = document.createElement('span'); 
     span.textContent = title; 
@@ -217,8 +225,8 @@ const tasks = [
       _id: `task-${Math.random()}`
     }; 
 
-    objOfTasks[newTask._id] = newTask; 
-
+    objOfTasks[newTask._id] = newTask;
+    // localStorage.setItem('todo', JSON.stringify(objOfTasks));
     return { ...newTask };
   }
 
@@ -230,6 +238,7 @@ const tasks = [
       return isConfirm;
     } else {
       delete objOfTasks[id]; 
+      console.log(objOfTasks)
       return isConfirm; 
     }
   } 
@@ -250,13 +259,16 @@ const tasks = [
     }
   } 
 
-  function completeTask({ target }) {
+  function onCompleteHandler ({ target }) {
     if(target.classList.contains('complete-btn')) {
       const parent = target.closest('[data-task-id]');
-      
-      parent.classList.toggle('list-group-item-success');
+      const id = parent.dataset.taskId; 
+      const isCompleted = parent.classList.toggle('list-group-item-success')
+
+      objOfTasks[id].completed = isCompleted;
+      localStorage.setItem('todo', JSON.stringify(objOfTasks));
     }
-  } 
+  }
 
   function onThemeSelectHandler(e) {
     const selectedTheme = themeSelect.value; 
