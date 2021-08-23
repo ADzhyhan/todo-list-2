@@ -81,26 +81,22 @@ const tasks = [
   const formWrapper = document.querySelector('.card');
   const inputTitle = form.elements['title'];
   const inputBody = form.elements['body'];
-  const themeSelect = document.getElementById('themeSelect');
+  const themeSelect = document.getElementById('themeSelect'); 
 
   const error = document.createElement('span'); 
-  error.textContent = 'Task list is empty :('
+  // error.textContent = 'Task list is empty :('
   error.style.color = 'red' 
   error.style.fontWeight = 'bold';
-
-  
 
   //Events
   setTheme(lastSelectedTheme);
   themeSelect.value = lastSelectedTheme;
-  
+
   if(localStorage.getItem('todo')) {
     objOfTasks = JSON.parse(localStorage.getItem('todo'));
     renderAllTasks(objOfTasks);
-  } else {
-    formWrapper.insertAdjacentElement('afterend', error); 
   }
-  // renderAllTasks(objOfTasks);
+
   form.addEventListener('submit', onFormSubmitHandler);
   listContainer.addEventListener('click', onDeleteHandler);
   listContainer.addEventListener('click', onCompleteHandler);
@@ -113,12 +109,12 @@ const tasks = [
     }
 
     const fragment = document.createDocumentFragment();
-
     Object.values(taskList).forEach(task => {
       const li = listItemTemplate(task);
       fragment.appendChild(li);
     });
     listContainer.appendChild(fragment);
+      
   } 
 
   function listItemTemplate ({ _id, title, body, completed } = {}) {
@@ -169,7 +165,7 @@ const tasks = [
     li.appendChild(deleteBtn); 
     li.appendChild(article); 
     li.appendChild(completeBtn);
-    
+  
     return li;
   }
 
@@ -186,6 +182,7 @@ const tasks = [
     const task = createNewTask(titleValue, bodyValue);
     const listItem = listItemTemplate(task);
 
+    error.innerHTML = '';
     listContainer.insertAdjacentElement('afterbegin', listItem);
     form.reset();
   }
@@ -211,6 +208,10 @@ const tasks = [
       return isConfirm;
     } else {
       delete objOfTasks[id]; 
+      if(localStorage.getItem('todo') !== null) {
+        error.textContent = 'Task list is empty :('
+        formWrapper.insertAdjacentElement('afterend', error);   
+      }
       localStorage.setItem('todo', JSON.stringify(objOfTasks));
       return isConfirm; 
     }
@@ -219,7 +220,6 @@ const tasks = [
   function deleteTaskFromHtml(confirmed, el) {
     if(!confirmed) return;
     el.remove();  
-    if(!listContainer.children.length) formWrapper.insertAdjacentElement('afterend', error);  
   }
 
   function onDeleteHandler({ target }) {
