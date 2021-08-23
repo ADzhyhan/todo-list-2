@@ -226,6 +226,7 @@ const tasks = [
     }; 
 
     objOfTasks[newTask._id] = newTask;
+    console.log(objOfTasks);
     localStorage.setItem('todo', JSON.stringify(objOfTasks));
     return { ...newTask };
   }
@@ -238,6 +239,7 @@ const tasks = [
       return isConfirm;
     } else {
       delete objOfTasks[id]; 
+      localStorage.setItem('todo', JSON.stringify(objOfTasks));
       console.log(objOfTasks)
       return isConfirm; 
     }
