@@ -127,7 +127,7 @@ const tasks = [
     objOfTasks = JSON.parse(localStorage.getItem('todo'));
     renderAllTasks(objOfTasks);
   }
-  renderAllTasks(objOfTasks);
+  // renderAllTasks(objOfTasks);
   form.addEventListener('submit', onFormSubmitHandler);
   listContainer.addEventListener('click', onDeleteHandler);
   listContainer.addEventListener('click', onCompleteHandler);
@@ -226,7 +226,7 @@ const tasks = [
     }; 
 
     objOfTasks[newTask._id] = newTask;
-    // localStorage.setItem('todo', JSON.stringify(objOfTasks));
+    localStorage.setItem('todo', JSON.stringify(objOfTasks));
     return { ...newTask };
   }
 
